@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guess Who: YouTubers Edition</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffeb99;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    background-color: #ff6666;
+    color: white;
+    padding: 20px 0;
+    margin: 0;
+  }
+
+  #game-board {
+    display: grid;
+    grid-template-columns: repeat(6, 150px);
+    grid-gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+  }
+
+  .card {
+    position: relative;
+    width: 150px;
+    height: 180px;
+    cursor: pointer;
+    border: 2px solid #ff6666;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: white;
+    transition: transform 0.3s;
+    transform-style: preserve-3d;
+  }
+
+  .card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+  }
+
+  .card-name {
+    background-color: #ffcc66;
+    padding: 5px;
+    font-weight: bold;
+    backface-visibility: hidden;
+    transition: transform 0.6s;
+  }
+
+  .card.flipped {
+    transform: rotateY(180deg) scale(0.9);
+    opacity: 0.3;
+  }
+
+  .card.correct {
+    animation: pop 0.5s ease forwards;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+  }
+
+  #mystery {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+
+  #reset-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff6666;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #reset-btn:hover {
+    background-color: #cc3333;
+  }
+</style>
+</head>
+<body>
+
+<h1>Guess Who: YouTubers Edition</h1>
+<p id="mystery">Try to guess who the mystery YouTuber is!</p>
+<div id="game-board"></div>
+<button id="reset-btn">Start New Game</button>
+
+<script>
+  const youtubers = [
+    {name: "MrBeast", img: "https://i.imgur.com/0YpbbN7.jpg"},
+    {name: "PewDiePie", img: "https://i.imgur.com/1nQn5Yk.jpg"},
+    {name: "Markiplier", img: "https://i.imgur.com/xzv3OQG.jpg"},
+    {name: "Jacksepticeye", img: "https://i.imgur.com/5x5W9zN.jpg"},
+    {name: "KSI", img: "https://i.imgur.com/q1h3B2C.jpg"},
+    {name: "Logan Paul", img: "https://i.imgur.com/k9xNNr7.jpg"},
+    {name: "Jake Paul", img: "https://i.imgur.com/5JvF4Nf.jpg"},
+    {name: "Chunks", img: "https://i.imgur.com/PuPp5zM.jpg"},
+    {name: "IShowSpeed", img: "https://i.imgur.com/jyI28Kc.jpg"},
+    {name: "Niko Omilana", img: "https://i.imgur.com/xxfFfGg.jpg"},
+    {name: "AJ", img: "https://i.imgur.com/7Q1a2xH.jpg"},
+    {name: "SSSniperWolf", img: "https://i.imgur.com/Ln2iZ5K.jpg"},
+    {name: "Pokimane", img: "https://i.imgur.com/YQw9g0b.jpg"},
+    {name: "Emma Chamberlain", img: "https://i.imgur.com/kRj0KTu.jpg"},
+    {name: "MatPat", img: "https://i.imgur.com/KZsMZtZ.jpg"},
+    {name: "Shane Dawson", img: "https://i.imgur.com/3sd7e6O.jpg"},
+    {name: "Rhett & Link", img: "https://i.imgur.com/Mg0b8b7.jpg"},
+    {name: "David Dobrik", img: "https://i.imgur.com/4C2BqP1.jpg"},
+    {name: "Charli D’Amelio", img: "https://i.imgur.com/UJ5nFqh.jpg"},
+    {name: "TommyInnit", img: "https://i.imgur.com/5WpxNqL.jpg"},
+    {name: "Bella Poarch", img: "https://i.imgur.com/xkTq6Fb.jpg"},
+    {name: "Ninja", img: "https://i.imgur.com/L9uKJjG.jpg"},
+    {name: "Dude Perfect", img: "https://i.imgur.com/TJXcG0v.jpg"},
+    {name: "Valkyrae", img: "https://i.imgur.com/7pqJbMG.jpg"}
+  ];
+
+  let mysteryYoutuber;
+
+  function startGame() {
+    const board = document.getElementById('game-board');
+    board.innerHTML = '';
+    mysteryYoutuber = youtubers[Math.floor(Math.random() * youtubers.length)];
+    document.getElementById('mystery').textContent = 'Try to guess who the mystery YouTuber is!';
+
+    youtubers.forEach(y => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<img src="${y.img}" alt="${y.name}"><div class="card-name">${y.name}</div>`;
+      card.addEventListener('click', () => {
+        if (y.name === mysteryYoutuber.name) {
+          card.classList.add('correct');
+          setTimeout(() => {
+            alert(`Correct! The mystery YouTuber was ${mysteryYoutuber.name}!`);
+            startGame();
+          }, 500);
+        } else {
+          card.classList.add('flipped');
+        }
+      });
+      board.appendChild(card);
+    });
+  }
+
+  document.getElementById('reset-btn').addEventListener('click', startGame);
+
+  startGame();
+</script>
+
+</body>
+</html>
